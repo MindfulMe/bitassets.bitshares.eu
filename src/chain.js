@@ -4,6 +4,7 @@ class Blockchain {
 
   constructor() {
     this._nodes = [
+      "wss://node.bitshares.eu",
       "wss://eu.nodes.bitshares.ws",
       "wss://us.nodes.bitshares.ws",
       "wss://sg.nodes.bitshares.ws",

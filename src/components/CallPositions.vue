@@ -1,39 +1,38 @@
 <template>
-  <div>
-    <v-card v-if="is_loaded()">
-      <v-card-title><h4>{{ symbol }}</h4></v-card-title>
-      <v-divider></v-divider>
-      <v-list dense>
-        <template v-for="(item, index) in mainitems">
-          <v-list-tile :key="index">
-            <v-list-tile-content>{{item.name}}</v-list-tile-content>
-            <v-list-tile-content :key="item.name" class="align-end">{{ item.value }}</v-list-tile-content>
-          </v-list-tile>
-        </template>
-      </v-list>
-    </v-card>
+  <div v-if="is_loaded()">
+    <h4>{{ symbol }}</h4>
+    <CallPositionsOverview
+      :callPositions="callPositions"
+      :asset="asset"
+      :collateral_asset="collateral_asset"
+      :ticker="ticker"
+      :settlementPrice=settlementPrice
+    />
     <v-container grid-list-md text-xs-center>
-      <v-layout row wrap v-if="chart_ratios">
+      <v-layout row wrap>
         <v-flex xs4>
-          <CallPositionsChartRatio
-            :chartData="chart_ratios"
-            :chartLabels="chart_ratios_labels"
-            yLabel="# Positions/Histogram"
-            />
+          <CallPositionsChartRatios
+            :callPositions="callPositions"
+            :asset="asset"
+            :collateral_asset="collateral_asset"
+            :settlementPrice=settlementPrice
+          />
         </v-flex>
         <v-flex xs4>
-          <CallPositionsChartRatio
-            :chartData="chart_amount_vs_ratio"
-            :chartLabels="chart_amount_vs_ratio_labels"
-            yLabel="Amount per Ratio"
-            />
+          <CallPositionsChartRatioVsAmount
+            :callPositions="callPositions"
+            :asset="asset"
+            :collateral_asset="collateral_asset"
+            :settlementPrice=settlementPrice
+          />
         </v-flex>
         <v-flex xs4>
-          <CallPositionsChartRatio
-            :chartData="chart_amount_vs_ratio_cdf"
-            :chartLabels="chart_amount_vs_ratio_cdf_labels"
-            yLabel="Amount per Ratio CDF"
-            />
+          <CallPositionsChartRatioVsAmountCDF
+            :callPositions="callPositions"
+            :asset="asset"
+            :collateral_asset="collateral_asset"
+            :settlementPrice=settlementPrice
+          />
         </v-flex>
       </v-layout>
     </v-container>
@@ -43,7 +42,10 @@
 <script>
   import BitSharesConnect from './BitSharesConnect'
   import LoadingIndicator from './LoadingIndicator'
-  import CallPositionsChartRatio from './CallPositionsChartRatio'
+  import CallPositionsOverview from './CallPositionsOverview'
+  import CallPositionsChartRatioVsAmount from './CallPositionsChartRatioVsAmount'
+  import CallPositionsChartRatioVsAmountCDF from './CallPositionsChartRatioVsAmountCDF'
+  import CallPositionsChartRatios from './CallPositionsChartRatios'
   import histogram from '../histogram'
 
   export default {
@@ -52,7 +54,10 @@
     extends: BitSharesConnect,
     components: {
       LoadingIndicator,
-      CallPositionsChartRatio
+      CallPositionsChartRatioVsAmount,
+      CallPositionsChartRatios,
+      CallPositionsOverview,
+      CallPositionsChartRatioVsAmountCDF
     },
     data () {
       return {
@@ -63,8 +68,6 @@
         collateral_asset_id: null,
         collateral_asset: null,
         asset_bitasset_data: null,
-        chart_ratios: null,
-        chart_ratios_labels: null,
         chart_amount_vs_ratio: null,
         chart_amount_vs_ratio_labels: null,
         chart_amount_vs_ratio_cdf: null,
@@ -72,83 +75,16 @@
       };
     },
     computed: {
-      mainitems () {
-        return [{
-          name: "Collateral",
-          value: this.totalCollateral
-        },{
-          name: "Debt",
-          value: this.totalDebt
-        },{
-          name: "Number positions",
-          value: this.numberPositions
-        },{
-          name: "Last Price",
-          value: this.lastPrice
-        }, {
-          name: "Settlement Price",
-          value: this.settlementPrice
-        }, {
-          name: "Backing ratio",
-          value: this.averageRatio
-        }];
-      },
-      totalCollateral() {
-        if (!this.collateral_asset) return;
-        let value = this.callPositions.reduce(
-          (state, x) => state + parseFloat(x.collateral), 0.0)
-          / (10 ** this.collateral_asset.precision);
-          return this.formatPrice(value, this.collateral_asset.precision, this.collateral_asset.symbol)
-      },
-      totalDebt() {
-        if (!this.asset) return;
-        let value = this.callPositions.reduce(
-          (state, x) => state + parseFloat(x.debt), 0.0)
-          / (10 ** this.asset.precision);
-        return this.formatPrice(value, this.asset.precision, this.asset.symbol)
-      },
-      averageRatio() {
-        if (!this.ticker) return;
-        if (!this.asset) return;
-        if (!this.collateral_asset) return;
-        let price = parseFloat(this._getSettlementPrice());
-        let debt = this.callPositions.reduce(
-          (state, x) => state + parseFloat(x.debt), 0.0)
-          / (10 ** this.asset.precision);
-        let collateral = this.callPositions.reduce(
-          (state, x) => state + parseFloat(x.collateral), 0.0)
-          / (10 ** this.collateral_asset.precision);
-        let value = collateral * price / debt;
-        return value.toFixed(4) + "x";
-      },
-      numberPositions() {
-        return this.callPositions.length;
-      },
       settlementPrice() {
-        if (!this.asset_bitasset_data) return
-        if (!this.asset) return;
-        if (!this.collateral_asset) return;
-        let price = this._getSettlementPrice();
-        return price.toFixed(4) + " " + this.asset.symbol + "/" + this.collateral_asset.symbol;
-      },
-      lastPrice() {
-        if (!this.ticker) return;
-        if (!this.collateral_asset) return;
-        if (!this.asset) return;
-        let price = parseFloat(this.ticker.latest);
-        return price.toFixed(4) + " " + this.asset.symbol + "/" + this.collateral_asset.symbol;
-      }
-    },
-    methods: {
-      _getSettlementPrice() {
         if (!this.asset_bitasset_data) return
         if (!this.asset) return;
         if (!this.collateral_asset) return;
         let feed = this.asset_bitasset_data.current_feed.settlement_price;
         return (feed.base.amount * 10 ** this.collateral_asset.precision) / (feed.quote.amount * 10 ** this.asset.precision);
       },
+    },
+    methods: {
       finish_loading() {
-        this.prepareChartData();
         if (this.is_loaded())
           this.$emit('loading', false);
       },
@@ -162,52 +98,6 @@
       },
       onConnected() {
         this.getAssets();
-      },
-      prepareChartData() {
-        if (!this.ticker) return;
-        if (!this.asset) return;
-        if (!this.collateral_asset) return;
-        let price = parseFloat(this._getSettlementPrice());
-
-        // ratios
-        let ratios = this.callPositions.map((x) => {
-            let debt = parseFloat(x.debt) / (10 ** this.asset.precision);
-            let collateral = parseFloat(x.collateral) / (10 ** this.collateral_asset.precision);
-            return (collateral * price / debt).toFixed(2);
-          });
-        // prepare ratios
-        ratios.push(0);
-        ratios = ratios.filter(x => x <= 10.0);
-        // histogram
-        let hist = histogram(ratios);
-        this.chart_ratios = hist.bins;
-        this.chart_ratios_labels = hist.labels;
-
-        // amount per ratio
-        let data = this.callPositions.map((x) => {
-          let debt = parseFloat(x.debt) / (10 ** this.asset.precision);
-          let collateral = parseFloat(x.collateral) / (10 ** this.collateral_asset.precision);
-          let ratio = (collateral * price / debt);
-          return { ratio, debt, collateral };
-        });
-        data = data.filter(x => x.ratio < 10);
-        data = data.filter(x => x.debt > 1000);
-        data.unshift({ratio: 0.0, debt: 0.0, collateral: 0.0});
-        let points = data.map(x => x.debt)
-        let labels = data.map(x => x.ratio);
-
-        this.chart_amount_vs_ratio = points;
-        this.chart_amount_vs_ratio_labels = labels;
-
-        points = this.cumsum(points);
-        this.chart_amount_vs_ratio_cdf = points;
-        this.chart_amount_vs_ratio_cdf_labels = labels;
-      },
-      cumsum(x) {
-        return x.reduce(function(r, a) {
-          r.push((r.length && r[r.length - 1] || 0) + a);
-          return r;
-        }, []);
       },
       getCallPositions() {
         if (!this.asset_id) return;
@@ -263,15 +153,6 @@
           })
           .catch(o => console.error(o))
       },
-      formatPrice(value, precision, currency) {
-        var formatter = new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: currency,
-          maximumFractionDigits: precision,
-          minimumFractionDigits: 2
-        });
-        return formatter.format(value);
-      }
     }
   }
 </script>

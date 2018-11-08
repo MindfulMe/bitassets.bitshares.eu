@@ -23,10 +23,9 @@ notifications:
 deploy:
   provider: pages
   skip-cleanup: true
-  local_dir: docs/.vuepress/dist
+  local_dir: dist
   github-token: "$GITHUB_TOKEN"
   repo: "$GITHUB_REPO"
   keep-history: true
-  target-branch: gh-pages
   on:
     branch: master

@@ -6,7 +6,7 @@
     mixins: [reactiveProp],
     props: {
       chartData: {
-        type: Array | Object,
+        type: Array,
         required: false
       },
       chartLabels: {

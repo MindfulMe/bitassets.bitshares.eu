@@ -40,7 +40,6 @@
 
 <script>
   import BitSharesConnect from './BitSharesConnect'
-  import LoadingIndicator from './LoadingIndicator'
   import CallPositionsOverview from './CallPositionsOverview'
   import CallPositionsChartRatioVsAmount from './CallPositionsChartRatioVsAmount'
   import CallPositionsChartRatioVsAmountCDF from './CallPositionsChartRatioVsAmountCDF'
@@ -52,7 +51,6 @@
     props: ["symbol"],
     extends: BitSharesConnect,
     components: {
-      LoadingIndicator,
       CallPositionsChartRatioVsAmount,
       CallPositionsChartRatios,
       CallPositionsOverview,

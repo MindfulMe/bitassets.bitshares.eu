@@ -1,11 +1,12 @@
 <template>
-  <v-card>
-    <v-list dense>
-      <template v-for="(item, index) in mainitems">
-        <v-list-tile :key="index">
-          <v-list-tile-content>{{item.name}}</v-list-tile-content>
-          <v-list-tile-content :key="item.name" class="align-end">{{ item.value }}</v-list-tile-content>
-        </v-list-tile>
+  <v-card class="card">
+    <v-list dense class="content">
+      <template v-for="(item) in mainitems">
+        <div class="item" :key="item.name">
+          {{ item.name }}
+          <br>
+          <div class="item-value">{{ item.value }}</div>
+        </div>
       </template>
     </v-list>
   </v-card>
@@ -100,5 +101,24 @@
 </script>
 
 <style scoped>
+.card {
+  height: 2%;
+  width: 104%;
+  margin: -2% 0 0 -2%;
+}
 
+.content {
+  background-color: #191a1f;
+  display: flex;
+  padding-left: 1%;
+}
+
+.item {
+  margin: 10px 20px 10px 20px;
+  color: white;
+}
+
+.item-value {
+   color: #7ed321;
+}
 </style>

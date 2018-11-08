@@ -10,8 +10,7 @@
         <v-select
           :items="enabled_symbols"
           v-model="symbol"
-          class="select selection"
-          label="Select BitAsset"
+          class="select"
           solo
           >
           <!-- eslint-disable-next-line -->
@@ -27,7 +26,7 @@
           </template>
         </v-select>
         </v-flex>
-      <LoadingIndicator v-if="loading" :size=16 :width=3 />
+      <LoadingIndicator v-if="loading" :size=32 :width=3 />
     </v-toolbar>
     <v-content class="body">
       <v-container fluid grid-list-md>
@@ -68,19 +67,18 @@ export default {
 </script>
 
 <style lang="css" scoped>
-
 .body {
-  background-color: rgb(187, 233, 250); /* W3C  background: linear-gradient(90deg, #16BFFD 10%, rgb(205, 242, 255) 90%); /* W3C */
-	font-family: 'Raleway', sans-serif; 
+  background-color: #222328;
+	font-family: roboto-regular,arial,sans-serif;
 	font-size: 20px; 
 }
 
 .header {
-  background: linear-gradient(90deg, rgb(110, 216, 255) 10%, rgb(205, 242, 255) 90%);
+  background: linear-gradient(90deg, black 5%, #191a1f 95%);
 }
 
 .select {
-  margin: -40px 0 0 auto;
+  margin: -40px 10px 0 auto;
   padding: 0;
 	width: 160px;
 	padding: 15px;
@@ -88,27 +86,8 @@ export default {
 	cursor: pointer;
 }
 
-/*
-select option {
-	background-color: white;
-	color: gray;
-	width: 310px;
-	padding: 10px 15px;
-	height: 20px;
-	cursor: pointer;
+.headline {
+  color: white;
 }
-
-select option:hover {
-	padding-left: 25px;
-	width: 270px;
-	color: #EC6F66;
-}
-select:hover {
-	background-color: transparent;
-	color: white;
-	padding: 15px 5px 15px 25px;
-}
-*/
-
 </style>
 

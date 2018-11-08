@@ -1,6 +1,5 @@
 <template>
   <div v-if="is_loaded()">
-    <h4>{{ symbol }}</h4>
     <CallPositionsOverview
       :callPositions="callPositions"
       :asset="asset"
@@ -83,10 +82,24 @@
         return (feed.base.amount * 10 ** this.collateral_asset.precision) / (feed.quote.amount * 10 ** this.asset.precision);
       },
     },
+    watch: { 
+      symbol: function(newVal, oldVal) { // watch it
+        console.log('Prop changed: ', newVal, ' | was: ', oldVal)
+        this.$emit('loading', true);
+        this.reset();
+        this.getAssets();
+      }
+    },
     methods: {
       finish_loading() {
         if (this.is_loaded())
           this.$emit('loading', false);
+      },
+      reset() {
+          this.asset = null
+          this.collateral_asset = null
+          this.ticker = null
+          this.asset_bitasset_data = null
       },
       is_loaded() {
         return (

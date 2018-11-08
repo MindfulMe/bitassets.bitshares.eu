@@ -10,7 +10,19 @@
     </v-toolbar>
     <v-content>
       <v-container fluid grid-list-md>
-        <CallPositions symbol="USD" v-on:loading="setLoading"/>
+        <v-layout wrap align-center>
+          <v-flex xs12>
+            <v-select
+              :items="enabled_symbols"
+              v-model="symbol"
+              label="Select BitAsset"
+              solo
+              ></v-select>
+          </v-flex>
+          <v-flex xs12>
+            <CallPositions :symbol="symbol" v-on:loading="setLoading"/>
+          </v-flex>
+        </v-layout>
       </v-container>
     </v-content>
   </v-app>
@@ -29,7 +41,8 @@ export default {
   data () {
     return {
       loading: true,
-      //
+      symbol: "USD",
+      enabled_symbols: ["USD", "CNY", "EUR"]
     }
   },
   methods: {

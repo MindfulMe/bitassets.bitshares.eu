@@ -3,6 +3,7 @@
     v-if="loaded"
     :chartData="chart_amount_vs_ratio"
     :chartLabels="chart_amount_vs_ratio_labels"
+    class="chart-body"
     yLabel="Amount per Ratio"
     />
 </template>
@@ -43,5 +44,3 @@
     }
   }
 </script>
-<style>
-</style>

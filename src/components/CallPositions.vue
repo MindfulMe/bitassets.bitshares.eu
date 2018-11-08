@@ -1,5 +1,5 @@
 <template>
-  <div v-if="is_loaded()">
+  <div v-if="is_loaded()" class="chart-main">
     <CallPositionsOverview
       :callPositions="callPositions"
       :asset="asset"
@@ -168,5 +168,9 @@
   }
 </script>
 
-<style>
+<style scoped>
+  
 </style>
+
+
+

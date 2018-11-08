@@ -3,6 +3,7 @@
     v-if="loaded"
     :chartData="chart_ratios"
     :chartLabels="chart_ratios_labels"
+    class="chart"
     yLabel="# Positions/Histogram"
     />
 </template>
@@ -41,5 +42,10 @@
     }
   }
 </script>
-<style>
+
+<style scoped>
+  .chart {
+    color:#ffffff;
+  }
 </style>
+

@@ -1,24 +1,37 @@
 <template>
   <v-app>
-    <v-toolbar app>
+    <v-toolbar class="header" app>
       <v-toolbar-title class="headline text-uppercase">
         <span>bitAsset</span>
         <span class="font-weight-light">BACKING</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+      <v-flex xs12>
+        <v-select
+          :items="enabled_symbols"
+          v-model="symbol"
+          class="select selection"
+          label="Select BitAsset"
+          solo
+          >
+          <!-- eslint-disable-next-line -->
+          <template slot="selection" slot-scope="data">
+            <v-avatar size="32px">
+              <svgicon
+                :name="symbol"
+                width="32"
+                height="32"
+              />
+            </v-avatar>
+            &nbsp;&nbsp;{{ symbol }}
+          </template>
+        </v-select>
+        </v-flex>
       <LoadingIndicator v-if="loading" :size=16 :width=3 />
     </v-toolbar>
-    <v-content>
+    <v-content class="body">
       <v-container fluid grid-list-md>
         <v-layout wrap align-center>
-          <v-flex xs12>
-            <v-select
-              :items="enabled_symbols"
-              v-model="symbol"
-              label="Select BitAsset"
-              solo
-              ></v-select>
-          </v-flex>
           <v-flex xs12>
             <CallPositions :symbol="symbol" v-on:loading="setLoading"/>
           </v-flex>
@@ -29,6 +42,7 @@
 </template>
 
 <script>
+import '@/assets/icons/'
 import CallPositions from './components/CallPositions'
 import LoadingIndicator from './components/LoadingIndicator'
 
@@ -52,3 +66,49 @@ export default {
   }
 }
 </script>
+
+<style lang="css" scoped>
+
+.body {
+  background-color: rgb(187, 233, 250); /* W3C  background: linear-gradient(90deg, #16BFFD 10%, rgb(205, 242, 255) 90%); /* W3C */
+	font-family: 'Raleway', sans-serif; 
+	font-size: 20px; 
+}
+
+.header {
+  background: linear-gradient(90deg, rgb(110, 216, 255) 10%, rgb(205, 242, 255) 90%);
+}
+
+.select {
+  margin: -40px 0 0 auto;
+  padding: 0;
+	width: 160px;
+	padding: 15px;
+	height: 25px;
+	cursor: pointer;
+}
+
+/*
+select option {
+	background-color: white;
+	color: gray;
+	width: 310px;
+	padding: 10px 15px;
+	height: 20px;
+	cursor: pointer;
+}
+
+select option:hover {
+	padding-left: 25px;
+	width: 270px;
+	color: #EC6F66;
+}
+select:hover {
+	background-color: transparent;
+	color: white;
+	padding: 15px 5px 15px 25px;
+}
+*/
+
+</style>
+

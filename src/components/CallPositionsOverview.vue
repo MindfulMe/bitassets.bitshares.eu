@@ -3,8 +3,7 @@
     <v-list dense class="content">
       <template v-for="(item) in mainitems">
         <div class="item" :key="item.name">
-          {{ item.name }}
-          <br>
+          <div>{{ item.name }}</div>
           <div class="item-value">{{ item.value }}</div>
         </div>
       </template>
@@ -108,17 +107,42 @@
 }
 
 .content {
-  background-color: #191a1f;
+  background-color: #055288;
   display: flex;
   padding-left: 1%;
 }
 
 .item {
+  display: flex;
+  flex-direction: column;
   margin: 10px 20px 10px 20px;
   color: white;
 }
 
 .item-value {
-   color: #7ed321;
+  color: #03A4DC;
+}
+
+@media only screen and (max-width: 950px) {
+  .card {
+    height: 100%;
+    width: 104%;
+    border-radius: 10px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .item-value {
+    font-size: 15px;
+  }
 }
 </style>

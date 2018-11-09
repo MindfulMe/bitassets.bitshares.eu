@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    
     <v-toolbar class="header" app>
       <v-toolbar-title class="headline text-uppercase">
         <span>bitAsset</span>
@@ -37,6 +38,7 @@
         </v-layout>
       </v-container>
     </v-content>
+    
   </v-app>
 </template>
 
@@ -68,26 +70,25 @@ export default {
 
 <style lang="css" scoped>
 .body {
-  background-color: #222328;
-	font-family: roboto-regular,arial,sans-serif;
+	font-family: "Open Sans",sans-serif;
 	font-size: 20px; 
 }
 
 .header {
-  background: linear-gradient(90deg, black 5%, #191a1f 95%);
+  background-color: white;
 }
 
 .select {
   margin: -40px 10px 0 auto;
-  padding: 0;
 	width: 160px;
 	padding: 15px;
 	height: 25px;
 	cursor: pointer;
+  color: #03A4DC;
 }
 
 .headline {
-  color: white;
+  color: #03A4DC;
 }
 </style>
 

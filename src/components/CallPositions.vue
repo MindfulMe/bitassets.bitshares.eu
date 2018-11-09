@@ -8,8 +8,8 @@
       :settlementPrice=settlementPrice
     />
     <v-container grid-list-md text-xs-center>
-      <v-layout row wrap>
-        <v-flex xs4>
+      <v-layout class="graph-box" row wrap>
+        <v-flex xs32>
           <CallPositionsChartRatios
             :callPositions="callPositions"
             :asset="asset"
@@ -17,7 +17,7 @@
             :settlementPrice=settlementPrice
           />
         </v-flex>
-        <v-flex xs4>
+        <v-flex xs32>
           <CallPositionsChartRatioVsAmount
             :callPositions="callPositions"
             :asset="asset"
@@ -25,7 +25,7 @@
             :settlementPrice=settlementPrice
           />
         </v-flex>
-        <v-flex xs4>
+        <v-flex xs32>
           <CallPositionsChartRatioVsAmountCDF
             :callPositions="callPositions"
             :asset="asset"
@@ -168,7 +168,13 @@
   }
 </script>
 
-<style>
+<style scoped>
+@media only screen and (max-width: 950px) {
+  .graph-box {
+    display: flex;
+    flex-direction: column;
+  }
+}
 </style>
 
 
